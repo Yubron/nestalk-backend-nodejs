@@ -17,10 +17,13 @@ io.on('connection', (socket) => {
   // IP 정보
   const req = socket.request;
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(`✅ Server connected successfully`, ip, socket.id);
+  console.log(`✅ Server connected successfully`, ip, socket.id, socket.room);
   // 클라이언트로부터 메시지 수신
-  socket.on('newMessage', ({ message }) => {
-    socket.broadcast.emit('messageNotification', { message, nickname: socket.nickname || 'Anon' });
+  socket.on('newMessage', ({message, roomName}) => {
+    // 채팅방에 입장한 후 JOIN 행위가 이루어지고, 그 값을 가지고 있어야 한다,,
+    socket.join(roomName);
+    console.log(message + '<<< >>>' + roomName)
+    socket.broadcast.to(roomName).emit('messageNotification', { message });
   });
   // 에러
   socket.on('error', (error) => {
