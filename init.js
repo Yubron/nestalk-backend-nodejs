@@ -2,6 +2,8 @@ const app = require('./app');
 const db = require('./db');
 const dotenv = require('dotenv');
 const socketIO = require('socket.io');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' })
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -38,8 +40,7 @@ io.on('connection', (socket) => {
   });
 
   // 유저가 메시지를 전송한 경우
-  socket.on('sendMessageToServer', ({ userId, roomId, message }) => {
-    // DB에 채팅내용 저장하고 채팅방에 전달
-    io.to(roomId).emit('getMessageFromServer', { userId, roomId, message });
+  socket.on('sendMessageToServer', ({ chat }) => {
+    io.to(chat.roomId).emit('getMessageFromServer', chat);
   });
 });

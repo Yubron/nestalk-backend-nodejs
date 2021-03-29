@@ -33,14 +33,35 @@ socket.on('roomInfo', ({ roomUsers, roomChats }) => {
 // 메시지 전송버튼을 누르면
 chatForm.addEventListener('submit', (e) => {
   e.preventDefault();
+  const file = document.getElementById('chatFile').files[0];
+  const message = document.getElementById('chatInput').value;
   userId = document.getElementById('userId').value;
   roomId = document.getElementById('roomId').value;
-  const message = document.getElementById('chatInput').value;
 
-  socket.emit('sendMessageToServer', { userId, roomId, message });
+
+  const xhr = new XMLHttpRequest();   // API 호출하기 위해 XHR
+  const formData = new FormData();    // Img전송을 하기 위해 formData 형식 사용
+
+  formData.append('message', message);
+  formData.append('file', file);
+  formData.append('userId', userId);
+  formData.append('roomId', roomId);
+
+
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const chat = xhr.response;
+      socket.emit('sendMessageToServer', JSON.parse(chat));
+    } else {
+      console.log(xhr.responseText);
+    }
+  };
+  xhr.open('POST', '/upload');
+  xhr.send(formData);
+
 });
 
 // 서버로부터 메시지를 받음
-socket.on('getMessageFromServer', ({ userId, roomId, message }) => {
-  console.log({ userId, roomId, message });
+socket.on('getMessageFromServer', (chat) => {
+  console.log(chat);
 });
