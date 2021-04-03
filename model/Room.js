@@ -1,10 +1,19 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const RoomSchema = new mongoose.Schema(
+const RoomSchema = new Schema(
   {
     roomName: {
       type: String,
-      required: 'Room Name is required',
+      required: "Room Name is required",
+    },
+    participants: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    chats: {
+      type: Schema.Types.ObjectId,
+      ref: "Chat",
     },
   },
   {
@@ -12,5 +21,5 @@ const RoomSchema = new mongoose.Schema(
   }
 );
 
-const model = mongoose.model('Room', RoomSchema);
+const model = mongoose.model("Room", RoomSchema);
 module.exports = model;
