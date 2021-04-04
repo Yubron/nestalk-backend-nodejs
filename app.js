@@ -4,9 +4,14 @@ const app = express();
 const morgan = require('morgan');
 const chatRouter = require('./chatRouter');
 
+
 app.use(morgan('dev'));
-app.use(express.static(join(__dirname, 'tempClient')));
-app.set('view engine', 'html');
+
+// VIEW ENGINE HTML SET-UP
+app.set('views', __dirname + '/tempClient');
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+app.use(express.static(__dirname + '/tempClient'));
 
 app.use('/', chatRouter);
 
