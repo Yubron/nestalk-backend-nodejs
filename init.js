@@ -43,5 +43,4 @@ io.on('connection', (socket) => {
   socket.on('sendMessageToServer', ({ chat }) => {
     io.to(chat.roomId).emit('getMessageFromServer', chat);
   });
-
 });
