@@ -7,19 +7,19 @@ const RoomSchema = new Schema(
       type: String,
       required: "Room Name is required",
     },
-    participants: {
+    participants: [{
       type: Schema.Types.ObjectId,
       ref: "User",
-    },
-    chats: {
+    }],
+    chats: [{
       type: Schema.Types.ObjectId,
       ref: "Chat",
-    },
+    }],
   },
   {
     timestamps: true,
   }
 );
 
-const model = mongoose.model("Room", RoomSchema);
-module.exports = model;
+const Room = mongoose.model("Room", RoomSchema);
+module.exports = { Room };
